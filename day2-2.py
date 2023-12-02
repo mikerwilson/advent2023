@@ -7,20 +7,21 @@ filename = "day2-input.txt"
 rawdata = open(filename, 'r').read()
 games = rawdata.split("\n")
 
-maxcubes = {
-    "red": 12,
-    "green": 13,
-    "blue": 14
-}
-possiblegames = []
-# Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
+powervalues = []
 
 for game in games:
+
     if game.strip() == '':
         continue
+
+    maxcubes = {
+        "red": 0,
+        "green": 0,
+        "blue": 0
+    }
+
     gameid = game.split(':')[0].split(' ')[-1]
     plays = game.split(':')[1].strip().split(';')
-    possible = True
     for play in plays:
         # print("plays: '%s'" % plays)
         parts = play.split(",")
@@ -29,15 +30,17 @@ for game in games:
             number, color = part.split(' ')
             number = int(number)
             if color in maxcubes.keys():
-                if number > maxcubes[color]:
-                    possible = False
-                    continue
-    if possible:
-        possiblegames += [gameid]
+                maxcubes[color] = max(maxcubes[color], number)
 
-print(possiblegames)
+    power = 1
+    for i in maxcubes:
+        power = power * maxcubes[i]
+
+    powervalues += [power]
+    print('maxcubes: %s, power: %s' % (maxcubes,power))
+
 total = 0
-for value in possiblegames:
+for value in powervalues:
     total += int(value)
 
 print("Total: %s" % total)
