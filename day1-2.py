@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
+import re
 
-# rawdataset = """
-# two1nine
-# eightwothree
-# abcone2threexyz
-# xtwone3four
-# 4nineeightseven2
-# zoneight234
-# 7pqrstsixteen
-# """
+rawdataset = """
+two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen
+"""
 
 rawdataset = """
 5ffour295
@@ -1014,9 +1015,11 @@ cqmzqbxzfvonevmmmlxsnjr5zfg
 """
 
 
-rawdataset = """
-18k62nine1
-"""
+# rawdataset = """
+# 18k62nine1
+# 9nine1one
+# gsntbddbnone4cjqjmspzcsxmvvthreefive
+# """
 
 dataset = rawdataset.split("\n")
 digitlist = {
@@ -1048,16 +1051,32 @@ for item in dataset:
         continue
     print("string: '%s'" % item)
     for key in digitlist.keys():
-        pos = item.find(key)
-        if not pos == -1:
-            digits[pos] = digitlist[key]
-
-    leftval = digits[min(digits.keys())]
-    rightval = digits[max(digits.keys())]
+        # get a list of positions a string is found in
+        # returns empty list if nothing found
+        res = [i.start() for i in re.finditer(key, item)]
+        if not res == []:
+            # found something!
+            basedigit = digitlist[key]
+            if not basedigit in digits.keys():
+                digits[basedigit] = []
+            digits[basedigit] += res
     print(digits)
-    print("leftval: %s, rightval: %s\n" % (leftval,rightval))
+    lowestkey = ''
+    lowval = 9999
+    highestkey = ''
+    highval = -1
+    for key in digits.keys():
+        print("digits[key] = %s" % digits[key])
+        if min(digits[key]) < lowval:
+            lowval = min(digits[key])
+            lowestkey = key
+        if max(digits[key]) > highval:
+            highval = max(digits[key])
+            highestkey = key
 
-    values += [int("%s%s" % (leftval, rightval))]
+    print("lowestkey: %s, highestkey: %s\n" % (lowestkey,highestkey))
+
+    values += [int("%s%s" % (lowestkey, highestkey))]
 
 # print("Values: %s" % values)
 total = 0
