@@ -98,7 +98,7 @@ while True:
         break
 
 
-pprint("Symbol coords: %s" % symbols)
+pprint("Symbol coords (%s): %s" % (len(symbols), symbols))
 # Expand our list of positions to include all adjacent gridpoints
 
 symbolcoords = []
@@ -127,7 +127,11 @@ while notdone:
 
     else:
         if wasnumber and keep:
-            possibles[str(assembler)] = numbercoords
+            if str(assembler) in possibles.keys():
+                for coord in numbercoords:
+                    possibles[str(assembler)] += [coord]
+            else:
+                possibles[str(assembler)] = numbercoords
         assembler = ''
         numbercoords = []
         keep = False
@@ -138,27 +142,31 @@ while notdone:
 
 
 pprint("possibles: %s" % possibles)
-pprint("symbol map: %s" % symbolmap)
+# pprint("symbol map: %s" % symbolmap)
 # [x for x in list1 if x in list2]
 keepers = []
-
+hitlist = []
 for symbol in symbolmap.keys():
     hits = 0
     numbercache = []
     for number in possibles.keys():
-        matches = [x for x in symbolmap[symbol] if x in possibles[number]]
+        # matches = [x for x in symbolmap[symbol] if x in possibles[number]]
+        matches = [x for x in possibles[number] if x in symbolmap[symbol]]
         if len(matches) > 0:
             # pprint("matches: %s" % matches)
             hits += 1
-            numbercache += [number]
+            numbercache += [int(number)]
+        # else:
+        #     pprint("miss -> matches: %s" % (len(matches)))
 
-    if hits >= 2:
-        # pprint("hit!")
+    if hits == 2:
+        # pprint("hit!!  count: %s, numbers: %s" % (hits,numbercache))
         keepers += [multiplyList(numbercache)]
 
 
 total = 0
 for item in keepers:
-    total += int(item)
+    total += item
 
 pprint("Total: %s" % total)
+pprint("Total keepers: %s" % (len(keepers)))
