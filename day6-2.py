@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from pprint import pprint
-from collections import OrderedDict
 
 # filename = "day6-test.txt"
 filename = "day6-input.txt"
