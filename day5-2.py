@@ -2,8 +2,8 @@
 from pprint import pprint
 from collections import OrderedDict
 
-filename = "day5-test.txt"
-# filename = "day5-input.txt"
+# filename = "day5-test.txt"
+filename = "day5-input.txt"
 
 rawdata = open(filename, 'r').read()
 rawchunks = rawdata.split("\n\n")
